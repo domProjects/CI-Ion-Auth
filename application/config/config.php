@@ -23,7 +23,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '';
+$host_dev    = array('localhost', '127.0.0.1', '::1');
+$host_folder = 'ci-ion_auth';
+$host_prod   = 'your_domain.tld';
+
+if (in_array($_SERVER['HTTP_HOST'], $host_dev, TRUE))
+{
+	$domain = $_SERVER['HTTP_HOST'] . '/' . $host_folder;
+}
+else
+{
+	$domain = $host_prod;
+}
+
+if ( ! empty($_SERVER['HTTPS']))
+{
+	$config['base_url'] = 'https://'.$domain;
+}
+else
+{
+	$config['base_url'] = 'http://'.$domain;
+}
 
 /*
 |--------------------------------------------------------------------------
