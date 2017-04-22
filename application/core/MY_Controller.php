@@ -12,6 +12,16 @@ class MY_Controller extends CI_Controller
 		// Meta charset
 		$this->data['charset'] = ( ! empty($this->config->item('charset'))) ? $this->config->item('charset') : 'UTF-8';
 
+		// Ion Auth
+		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
+
+		// If logged request info user
+		if ($this->ion_auth->logged_in())
+		{
+			$this->data['user_info'] = $this->user_info_model->get_info($this->ion_auth->user()->row()->id);
+			$this->data['user_fullname'] = $this->data['user_info']['fullname'];
+		}
+
 		// Protection
 		$this->output->set_header('X-Content-Type-Options: nosniff');
 		$this->output->set_header('X-Frame-Options: DENY');
@@ -25,6 +35,36 @@ class Authenticate extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
+
+		// Theme
+		$this->data['theme'] = ( ! empty($this->config->item('dp_theme_auth'))) ? $this->config->item('dp_theme_auth') : 'default';
+		$this->data['theme_url'] = base_url($this->config->item('dp_theme_auth_url'));
+
+		// Title
+		$this->data['title'] = ( ! empty($this->config->item('dp_title'))) ? $this->config->item('dp_title') : 'CI-Ion Auth';
+	}
+
+	public function render()
+	{
+		// Gestion title and subtitle
+		if ( ! isset($this->data['subtitle']))
+		{
+			$this->data['separate'] = NULL;
+			$this->data['subtitle'] = NULL;
+		}
+		else
+		{
+			$this->data['separate'] = ' | ';
+		}
+
+		$this->data['pagetitle'] = $this->data['title'] . $this->data['separate'] . $this->data['subtitle'];
+
+		// Include content
+		$this->data['content'] = $this->parser->parse($this->data['page_content'], $this->data, TRUE);
+
+		// Render template
+		$this->data['data'] = &$this->data;
+		$this->parser->parse('auth/_theme/template', $this->data);
 	}
 }
 
