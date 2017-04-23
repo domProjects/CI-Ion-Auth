@@ -67,14 +67,14 @@ class Users extends Backend
 
 			if ($this->form_validation->run() == TRUE)
 			{
-				$email = strtolower($this->input->post('email'));
-				$identity = ($identity_column === 'email') ? $email : $this->input->post('identity');
+				$email    = strtolower($this->input->post('email'));
+				$identity = ($identity_column === 'email') ? $email : strtolower($this->input->post('identity'));
 				$password = $this->input->post('password');
 
 				$additional_data = array(
-					'first_name' => $this->input->post('first_name'),
-					'last_name'  => $this->input->post('last_name'),
-					'company'    => $this->input->post('company'),
+					'first_name' => ucwords($this->input->post('first_name'), '-'),
+					'last_name'  => mb_strtoupper($this->input->post('last_name'), 'UTF-8'),
+					'company'    => mb_strtoupper($this->input->post('company'), 'UTF-8'),
 					'phone'      => $this->input->post('phone')
 				);
 			}
@@ -250,7 +250,7 @@ class Users extends Backend
 			// validate form input
 			$this->form_validation->set_rules('first_name', 'lang:edit_user_validation_fname_label', 'trim|required');
 			$this->form_validation->set_rules('last_name', 'lang:dit_user_validation_lname_label', 'trim|required');
-			$this->form_validation->set_rules('phone', 'lang:edit_user_validation_phone_label', 'required');
+			$this->form_validation->set_rules('phone', 'lang:edit_user_validation_phone_label');
 			$this->form_validation->set_rules('company', 'lang:edit_user_validation_company_label', 'trim');
 
 			if (isset($_POST) && ! empty($_POST))
@@ -271,9 +271,9 @@ class Users extends Backend
 				if ($this->form_validation->run() === TRUE)
 				{
 					$data = array(
-						'first_name' => $this->input->post('first_name'),
-						'last_name'  => $this->input->post('last_name'),
-						'company'    => $this->input->post('company'),
+						'first_name' => ucwords($this->input->post('first_name'), '-'),
+						'last_name'  => mb_strtoupper($this->input->post('last_name'), 'UTF-8'),
+						'company'    => mb_strtoupper($this->input->post('company'), 'UTF-8'),
 						'edit_user_validation_phone_labele' => $this->input->post('phone')
 					);
 
@@ -282,8 +282,6 @@ class Users extends Backend
 					{
 						$data['password'] = $this->input->post('password');
 					}
-
-
 
 					// Only allow updating groups if user is admin
 					if ($this->ion_auth->is_admin())
