@@ -74,6 +74,55 @@ class Backend extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
+
+		if ( ! $this->ion_auth->logged_in() OR ! $this->ion_auth->is_admin())
+		{
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			// Load langage
+			$this->lang->load(array('backend'));
+
+			// Load helper
+			//$this->load->helper(array('activelink'));
+			
+			// Theme
+			$this->data['theme'] = ( ! empty($this->config->item('dp_theme_backend'))) ? $this->config->item('dp_theme_backend') : 'default';
+			$this->data['theme_url'] = base_url($this->config->item('dp_theme_backend_url'));
+
+			// Title
+			$this->data['title'] = $this->lang->line('administration');
+		}
+	}
+
+	public function render()
+	{
+		// Gestion title and subtitle
+		if ( ! isset($this->data['subtitle']))
+		{
+			$this->data['separate'] = NULL;
+			$this->data['subtitle'] = NULL;
+		}
+		else
+		{
+			$this->data['separate'] = ' | ';
+		}
+
+		$this->data['pagetitle'] = $this->data['title'] . $this->data['separate'] . $this->data['subtitle'];
+
+		// Include nav header
+		$this->data['nav_header'] = $this->parser->parse('backend/_theme/nav_header', $this->data, TRUE);
+
+		// Include navside
+		$this->data['nav_side'] = $this->parser->parse('backend/_theme/nav_side', $this->data, TRUE);
+
+		// Include content
+		$this->data['content'] = $this->parser->parse($this->data['page_content'], $this->data, TRUE);
+
+		// Render template
+		$this->data['data'] = $this->data;
+		$this->parser->parse('backend/_theme/template', $this->data);
 	}
 }
 

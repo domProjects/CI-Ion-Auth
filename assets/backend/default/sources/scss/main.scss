@@ -1,18 +1,100 @@
-//@import "auth_import";
+@import "bootstrap/bootstrap.scss";
 
-html, body {
+
+$bar-height:       50px;
+$bar-padding:    0 15px;
+$sidebar-width:   250px;
+
+$body-bg:    #FFFFFF;
+$bar-bg:     #2196F3;
+$bar-color:  #FFFFFF;
+$sidebar-bg: #000000;
+
+body {
+	background-color: $body-bg;
+	overflow: hidden;
+}
+
+/* CONTAINER */
+.adm_container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	width: 100vw;
+}
+
+/* HEADER */
+.adm_header {
+	background-color: $bar-bg;
+	color: $bar-color;
+	flex: 0 1 $bar-height;
+	display: flex;
+	align-items: center;
+}
+.adm_header-brand {
+	background-color: darken($bar-bg, 10%);
+	flex: 0 1 $sidebar-width;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: $bar-height;
+}
+.adm_header-nav {
+	flex: 1;
+	display: flex;
+	justify-content: space-between;
+	padding: $bar-padding;
+}
+.adm_header-brand h1 {
+	font-size: 1.25rem;
 	margin: 0;
 	padding: 0;
 }
 
-html {
-	box-sizing: border-box;
+/* MAIN */
+.adm_main {
+	flex: 1;
+	display: flex;
 }
 
-*, *::before, *::after {
-	box-sizing: inherit;
+/* MAIN >> SIDEBAR */
+.adm_sidebar {
+	background-color: $sidebar-bg;
+	flex: 0 1 $sidebar-width;
 }
 
-body {
-
+/* MAIN >> SECTION */
+.adm_section {
+	flex: 1;
+	padding: 15px 0;
 }
+
+/* FOOTER */
+.adm_footer {
+	background-color: $bar-bg;
+	color: $bar-color;
+	flex: 0 1 $bar-height;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.adm_footer-info,
+.adm_footer-copyright {
+	display: flex;
+	align-items: center;
+	height: $bar-height;
+}
+.adm_footer-info {
+	background-color: darken($bar-bg, 10%);
+	flex: 0 1 $sidebar-width;
+	justify-content: center;
+}
+.adm_footer-copyright {
+	flex: 1;
+	justify-content: flex-end;
+	padding: $bar-padding;
+}
+
+
+
+
