@@ -81,14 +81,14 @@ class Backend extends MY_Controller
 		}
 		else
 		{
+			// Load model
+			$this->load->model(array('backend_tools_model'));
+
 			// Load langage
 			$this->lang->load(array('backend'));
 
-			// Load helper
-			//$this->load->helper(array('activelink'));
-			
 			// Theme
-			$this->data['theme'] = ( ! empty($this->config->item('dp_theme_backend'))) ? $this->config->item('dp_theme_backend') : 'default';
+			$this->data['theme']     = ( ! empty($this->config->item('dp_theme_backend'))) ? $this->config->item('dp_theme_backend') : 'default';
 			$this->data['theme_url'] = base_url($this->config->item('dp_theme_backend_url'));
 
 			// Title
@@ -109,6 +109,7 @@ class Backend extends MY_Controller
 			$this->data['lang_active']             = $this->lang->line('active');
 			$this->data['lang_inactive']           = $this->lang->line('inactive');
 			$this->data['lang_see']                = $this->lang->line('see');
+			$this->data['lang_file']               = $this->lang->line('file');
 			$this->data['lang_first_name']         = $this->lang->line('first_name');
 			$this->data['lang_last_name']          = $this->lang->line('last_name');
 			$this->data['lang_company_name']       = $this->lang->line('company_name');
@@ -124,6 +125,7 @@ class Backend extends MY_Controller
 			$this->data['lang_color']              = $this->lang->line('color');
 			$this->data['lang_description']        = $this->lang->line('description');
 			$this->data['lang_delete']             = $this->lang->line('delete');
+			$this->data['lang_import']             = $this->lang->line('import');
 			$this->data['lang_yes']                = $this->lang->line('yes');
 			$this->data['lang_no']                 = $this->lang->line('no');
 		}
@@ -143,6 +145,9 @@ class Backend extends MY_Controller
 		}
 
 		$this->data['pagetitle'] = $this->data['title'] . $this->data['separate'] . $this->data['subtitle'];
+
+		// Error management
+		$this->data['result_flashdata'] = $this->backend_tools_model->display_flashdata('item');
 
 		// Include nav header
 		$this->data['nav_header'] = $this->parser->parse('backend/_theme/nav_header', $this->data, TRUE);

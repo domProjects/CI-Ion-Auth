@@ -27,6 +27,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 				<div class="adm_section">
 					<div class="container-fluid">
+						<div class="row">
+							<div class="col-12">
+								{result_flashdata}
+							</div>
+						</div>
 						{content}
 					</div>
 				</div>

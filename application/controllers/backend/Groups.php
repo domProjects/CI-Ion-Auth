@@ -24,9 +24,9 @@ class Groups extends Backend
 			//$this->data['color'] = $this->db->select('id_groups, color')->get('dp_auth_groups_color');
 			//$this->data['color'] = $this->db->get('dp_auth_groups_color');
 
-			$this->data['count_groups'] = $this->db->count_all($this->config->item('tables', 'ion_auth')['groups']);
-			$this->data['subtitle']     = $this->lang->line('security_groups');
-			$this->data['page_content'] = 'backend/groups/index';
+			$this->data['count_groups']   = $this->db->count_all($this->config->item('tables', 'ion_auth')['groups']);
+			$this->data['subtitle']       = $this->lang->line('security_groups');
+			$this->data['page_content']   = 'backend/groups/index';
 
 			$this->render();
 		}
@@ -138,5 +138,86 @@ class Groups extends Backend
 
 			$this->render();
 		}
+	}
+
+
+	public function import()
+	{
+		if ( ! $this->ion_auth->logged_in() && ! $this->ion_auth->is_admin())
+		{
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			$this->data['message']      = NULL;
+			$this->data['subtitle']     = 'Import';
+			$this->data['page_content'] = 'backend/groups/import';
+
+			$this->render();
+		}
+	}
+
+
+	public function import_process()
+	{
+		if ( ! $this->ion_auth->logged_in() && ! $this->ion_auth->is_admin())
+		{
+			redirect('auth/login', 'refresh');
+		}
+		else
+		{
+			$this->load->library('import_csv');
+
+			$config['upload_path']   = './uploads/';
+			$config['allowed_types'] = 'csv|txt';
+			$config['max_size']      = '1000';
+ 
+			$this->load->library('upload', $config);
+ 
+ 			if ($this->upload->do_upload('file'))
+ 			{
+				$file_data = $this->upload->data();
+
+				$file_path           = './uploads/'.$file_data['file_name'];
+				$column_headers      = array('name', 'description');
+				$detect_line_endings = TRUE;
+				$initial_line        = 0;
+				$delimiter           = ';';
+ 
+				if ($this->import_csv->get_array($file_path))
+				{
+					$csv_array = $this->import_csv->get_array($file_path, $column_headers, $detect_line_endings, $initial_line, $delimiter);
+
+					foreach ($csv_array as $row)
+					{
+						$insert_data = array(
+							'name'        => $row['name'],
+							'description' => $row['description']
+						);
+
+						$this->backend_tools_model->insert_csv('dp_auth_groups', $insert_data);
+					}
+
+					unlink($file_path);
+
+					$this->session->set_flashdata('item', array('message' => 'Csv Data Imported Succesfully', 'class' => 'success'));
+
+					redirect('backend/groups', 'refresh');
+				}
+				else
+				{
+					$this->data['message'] = "Error occured";
+				}
+ 			}
+			else
+			{
+				$this->data['message'] = $this->upload->display_errors();
+			}
+
+			$this->data['subtitle']     = 'Import';
+			$this->data['page_content'] = 'backend/groups/import';
+
+			$this->render();
+ 		} 
 	}
 }

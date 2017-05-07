@@ -16,7 +16,7 @@ $nbr_groups = ($count_groups > 0) ? ' <span class="badge badge-info">' . $count_
 										<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{lang_actions}</a>
 										<div class="dropdown-menu">
 											<?php echo anchor('backend/groups/add', '{lang_add_group}', array('class' => 'dropdown-item')); ?>
-											<?php echo anchor('#', '{lang_import_list}', array('class' => 'dropdown-item')); ?>
+											<?php echo anchor('backend/groups/import', '{lang_import_list}', array('class' => 'dropdown-item')); ?>
 											<div class="dropdown-divider"></div>
 											<?php echo anchor('#', '{lang_export_list}', array('class' => 'dropdown-item')); ?>
 										</div>

@@ -21,9 +21,30 @@ class Dashboard extends Backend
 		}
 		else
 		{
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+			$count_user  = $this->db->count_all($this->config->item('tables', 'ion_auth')['users']);
+			$count_group = $this->db->count_all($this->config->item('tables', 'ion_auth')['groups']);
 
-			$this->data['subtitle'] = $this->lang->line('dashboard');
+			if ($count_user >= 1)
+			{
+				$this->data['lang_user_plural'] = plural($this->lang->line('user'));
+			}
+			else
+			{
+				$this->data['lang_user_plural'] = $this->lang->line('user');
+			}
+
+			if ($count_group >= 1)
+			{
+				$this->data['lang_group_plural'] = plural($this->lang->line('group'));
+			}
+			else
+			{
+				$this->data['lang_group_plural'] = $this->lang->line('group');
+			}
+
+			$this->data['nbr_user']     = $count_user;
+			$this->data['nbr_group']    = $count_group;
+			$this->data['subtitle']     = $this->lang->line('dashboard');
 			$this->data['page_content'] = 'backend/dashboard';
 
 			$this->render();
