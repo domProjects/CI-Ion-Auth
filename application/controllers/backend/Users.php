@@ -6,6 +6,8 @@ class Users extends Backend
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->form_validation->set_error_delimiters($this->config->item('error_prefix'), $this->config->item('error_suffix'));
 	}
 
 
@@ -24,9 +26,8 @@ class Users extends Backend
 				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
 			}
 
-			$this->data['count_users'] = $this->db->count_all($this->config->item('tables', 'ion_auth')['users']);
-
-			$this->data['subtitle'] = $this->lang->line('users');
+			$this->data['count_users']  = $this->db->count_all($this->config->item('tables', 'ion_auth')['users']);
+			$this->data['subtitle']     = $this->lang->line('users');
 			$this->data['page_content'] = 'backend/users/index';
 
 			$this->render();
@@ -42,28 +43,28 @@ class Users extends Backend
 		}
 		else
 		{
-			$table_ion_auth = $this->config->item('tables', 'ion_auth');
+			$table_ion_auth  = $this->config->item('tables', 'ion_auth');
 			$identity_column = $this->config->item('identity', 'ion_auth');
 
 			$this->data['identity_column'] = $identity_column;
 
-			$this->form_validation->set_rules('first_name', 'lang:create_user_validation_fname_label', 'trim|required');
-			$this->form_validation->set_rules('last_name', 'lang:create_user_validation_lname_label', 'trim|required');
+			$this->form_validation->set_rules('first_name', 'lang:first_name', 'trim|required');
+			$this->form_validation->set_rules('last_name', 'lang:last_name', 'trim|required');
 
 			if ($identity_column !== 'email')
 			{
 				$this->form_validation->set_rules('identity', 'lang:create_user_validation_identity_label', 'required|is_unique[' . $table_ion_auth['users'] . '.' . $identity_column.']');
-				$this->form_validation->set_rules('email', 'lang:create_user_validation_email_label', 'required|valid_email');
+				$this->form_validation->set_rules('email', 'lang:email', 'required|valid_email');
 			}
 			else
 			{
-				$this->form_validation->set_rules('email', 'lang:create_user_validation_email_label', 'required|valid_email|is_unique[' . $table_ion_auth['users'] . '.email]');
+				$this->form_validation->set_rules('email', 'lang:email', 'required|valid_email|is_unique[' . $table_ion_auth['users'] . '.email]');
 			}
 
-			$this->form_validation->set_rules('phone', 'lang:create_user_validation_phone_label', 'trim');
-			$this->form_validation->set_rules('company', 'lang:create_user_validation_company_label', 'trim');
-			$this->form_validation->set_rules('password', 'lang:create_user_validation_password_label', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
-			$this->form_validation->set_rules('password_confirm', 'lang:create_user_validation_password_confirm_label', 'required');
+			$this->form_validation->set_rules('phone', 'lang:phone', 'trim');
+			$this->form_validation->set_rules('company', 'lang:company', 'trim');
+			$this->form_validation->set_rules('password', 'lang:password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
+			$this->form_validation->set_rules('password_confirm', 'lang:password_confirm', 'required');
 
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -87,8 +88,6 @@ class Users extends Backend
 			}
 			else
 			{
-				$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
 				$this->data['first_name'] = array(
 					'type'  => 'text',
 					'name'  => 'first_name',
@@ -146,7 +145,8 @@ class Users extends Backend
 					'class' => 'form-control'
 				);
 
-				$this->data['subtitle'] = $this->lang->line('create_user_heading');
+				$this->data['message']      = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+				$this->data['subtitle']     = $this->lang->line('create_user_heading');
 				$this->data['page_content'] = 'backend/users/add';
 
 				$this->render();
@@ -157,6 +157,8 @@ class Users extends Backend
 
 	public function activate($id = NULL, $code = FALSE)
 	{
+		$id = (int) $id;
+
 		if ($code !== FALSE)
 		{
 			$activation = $this->ion_auth->activate($id, $code);
@@ -191,7 +193,6 @@ class Users extends Backend
 
 		$id = (int) $id;
 
-		$this->load->library('form_validation');
 		$this->form_validation->set_rules('confirm', $this->lang->line('deactivate_validation_confirm_label'), 'required');
 		$this->form_validation->set_rules('id', $this->lang->line('deactivate_validation_user_id_label'), 'required|alpha_numeric');
 
@@ -201,15 +202,14 @@ class Users extends Backend
 			$this->data['csrf'] = $this->_get_csrf_nonce();
 
 			$user = $this->ion_auth->user($id)->row();
-			$this->data['id']       = $user->id;
-			$this->data['username'] = $user->username;
 
+			$this->data['lang_deactivate_user_confirm'] = $this->lang->line('deactivate_user_confirm');
+			$this->data['id']           = $user->id;
+			$this->data['username']     = $user->username;
+			$this->data['subtitle']     = 'Deactivate user';
+			$this->data['page_content'] = 'backend/users/deactivate';
 
-				$this->data['subtitle'] = 'Deactivate user';
-				$this->data['page_content'] = 'backend/users/deactivate';
-
-				$this->render();
-
+			$this->render();
 		}
 		else
 		{
@@ -243,8 +243,8 @@ class Users extends Backend
 		}
 		else
 		{
-			$user = $this->ion_auth->user($id)->row();
-			$groups = $this->ion_auth->groups()->result_array();
+			$user          = $this->ion_auth->user($id)->row();
+			$groups        = $this->ion_auth->groups()->result_array();
 			$currentGroups = $this->ion_auth->get_users_groups($id)->result();
 
 			// validate form input
@@ -274,7 +274,7 @@ class Users extends Backend
 						'first_name' => ucwords($this->input->post('first_name'), '-'),
 						'last_name'  => mb_strtoupper($this->input->post('last_name'), 'UTF-8'),
 						'company'    => mb_strtoupper($this->input->post('company'), 'UTF-8'),
-						'edit_user_validation_phone_labele' => $this->input->post('phone')
+						'phone'      => $this->input->post('phone')
 					);
 
 					// update the password if it was posted
@@ -332,12 +332,6 @@ class Users extends Backend
 				}
 			}
 
-			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-			$this->data['csrf'] = $this->_get_csrf_nonce();
-			$this->data['user_id'] = $user->id;
-			$this->data['groups'] = $groups;
-			$this->data['currentGroups'] = $currentGroups;
-
 			$this->data['first_name'] = array(
 				'type'  => 'text',
 				'name'  => 'first_name',
@@ -370,17 +364,22 @@ class Users extends Backend
 				'type'  => 'password',
 				'name'  => 'password',
 				'id'    => 'password',
-				'class' => 'form-control'
+				'class' => 'form-control form-control-warning'
 			);
 			$this->data['password_confirm'] = array(
 				'type'  => 'password',
 				'name'  => 'password_confirm',
 				'id'    => 'password_confirm',
-				'class' => 'form-control'
+				'class' => 'form-control form-control-warning'
 			);
 
-			$this->data['subtitle'] = $this->lang->line('edit_user_heading');
-			$this->data['page_content'] = 'backend/users/edit';
+			$this->data['csrf']          = $this->_get_csrf_nonce();
+			$this->data['user_id']       = $user->id;
+			$this->data['groups']        = $groups;
+			$this->data['currentGroups'] = $currentGroups;
+			$this->data['message']       = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+			$this->data['subtitle']      = $this->lang->line('edit_user_heading');
+			$this->data['page_content']  = 'backend/users/edit';
 
 			$this->render();
 		}

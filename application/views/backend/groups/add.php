@@ -5,30 +5,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 						<div class="row">
 							<div class="col-12">
-								<p><?php echo lang('create_group_subheading');?></p>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-12">
 								<?php echo form_open(current_url()); ?>
 									<div class="form-group">
-										<?php
-											echo form_label(lang('create_group_name_label'), 'group_name');
-											echo form_input($group_name);
-										?>
+										<?php echo form_label('{lang_group_name}', 'group_name'); ?>
+										<?php echo form_input($group_name); ?>
 									</div>
 									<div class="form-group">
-										<?php
-											echo form_label(lang('create_group_desc_label'), 'description');
-											echo form_input($description);
-										?>
+										<?php echo form_label('{lang_description}', 'description'); ?>
+										<?php echo form_input($description); ?>
 									</div>
 									<div class="form-group">
-										<?php
-											echo form_submit('submit', lang('create_group_submit_btn'), 'class="btn btn-primary"');
-											echo anchor('backend/groups', 'cancel', 'class="btn btn-primary"');
-										?>
+										<?php echo form_submit('submit', '{lang_create}', array('class' => 'btn btn-primary')); ?>
+										<?php echo anchor('backend/groups', '{lang_cancel}', array('class' => 'btn btn-primary')); ?>
 									</div>
 								<?php echo form_close(); ?>
 							</div>
@@ -36,6 +24,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 						<div class="row">
 							<div class="col-12">
-								<?php echo $message;?>
+								{message}
 							</div>
 						</div>

@@ -18,7 +18,7 @@ class MY_Controller extends CI_Controller
 		// If logged request info user
 		if ($this->ion_auth->logged_in())
 		{
-			$this->data['user_info'] = $this->user_info_model->get_info($this->ion_auth->user()->row()->id);
+			$this->data['user_info']     = $this->user_info_model->get_info($this->ion_auth->user()->row()->id);
 			$this->data['user_fullname'] = $this->data['user_info']['fullname'];
 		}
 
@@ -93,6 +93,39 @@ class Backend extends MY_Controller
 
 			// Title
 			$this->data['title'] = $this->lang->line('administration');
+
+			// Common language
+			$this->data['lang_list']               = $this->lang->line('list');
+			$this->data['lang_actions']            = $this->lang->line('actions');
+			$this->data['lang_help']               = $this->lang->line('help');
+			$this->data['lang_edit']               = $this->lang->line('edit');
+			$this->data['lang_export_list']        = $this->lang->line('export_list');
+			$this->data['lang_import_list']        = $this->lang->line('import_list');
+			$this->data['lang_add_user']           = $this->lang->line('add_user');
+			$this->data['lang_email']              = $this->lang->line('email');
+			$this->data['lang_group']              = $this->lang->line('group');
+			$this->data['lang_group_name']         = $this->lang->line('group_name');
+			$this->data['lang_status']             = $this->lang->line('status');
+			$this->data['lang_active']             = $this->lang->line('active');
+			$this->data['lang_inactive']           = $this->lang->line('inactive');
+			$this->data['lang_see']                = $this->lang->line('see');
+			$this->data['lang_first_name']         = $this->lang->line('first_name');
+			$this->data['lang_last_name']          = $this->lang->line('last_name');
+			$this->data['lang_company_name']       = $this->lang->line('company_name');
+			$this->data['lang_phone']              = $this->lang->line('phone');
+			$this->data['lang_password']           = $this->lang->line('password');
+			$this->data['lang_password_confirm']   = $this->lang->line('password_confirm');
+			$this->data['lang_password_if_change'] = $this->lang->line('password_if_change');
+			$this->data['lang_cancel']             = $this->lang->line('cancel');
+			$this->data['lang_create']             = $this->lang->line('create');
+			$this->data['lang_save']               = $this->lang->line('save');
+			$this->data['lang_add_group']          = $this->lang->line('add_group');
+			$this->data['lang_name']               = $this->lang->line('name');
+			$this->data['lang_color']              = $this->lang->line('color');
+			$this->data['lang_description']        = $this->lang->line('description');
+			$this->data['lang_delete']             = $this->lang->line('delete');
+			$this->data['lang_yes']                = $this->lang->line('yes');
+			$this->data['lang_no']                 = $this->lang->line('no');
 		}
 	}
 

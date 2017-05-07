@@ -6,6 +6,8 @@ class Groups extends Backend
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->form_validation->set_error_delimiters($this->config->item('error_prefix'), $this->config->item('error_suffix'));
 	}
 
 
@@ -18,10 +20,12 @@ class Groups extends Backend
 		else
 		{
 			$this->data['groups'] = $this->ion_auth->groups()->result();
+			// IN TEST
+			//$this->data['color'] = $this->db->select('id_groups, color')->get('dp_auth_groups_color');
+			//$this->data['color'] = $this->db->get('dp_auth_groups_color');
 
 			$this->data['count_groups'] = $this->db->count_all($this->config->item('tables', 'ion_auth')['groups']);
-
-			$this->data['subtitle'] = $this->lang->line('security_groups');
+			$this->data['subtitle']     = $this->lang->line('security_groups');
 			$this->data['page_content'] = 'backend/groups/index';
 
 			$this->render();
@@ -37,7 +41,7 @@ class Groups extends Backend
 		}
 		else
 		{
-			$this->form_validation->set_rules('group_name', $this->lang->line('create_group_validation_name_label'), 'required|alpha_dash');
+			$this->form_validation->set_rules('group_name', 'lang:group_name', 'required|alpha_dash');
 
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -52,8 +56,6 @@ class Groups extends Backend
 			}
 			else
 			{
-				$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
 				$this->data['group_name'] = array(
 					'type'  => 'text',
 					'name'  => 'group_name',
@@ -69,7 +71,8 @@ class Groups extends Backend
 					'class' => 'form-control'
 				);
 
-				$this->data['subtitle'] = $this->lang->line('create_group_title');
+				$this->data['message']      = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+				$this->data['subtitle']     = $this->lang->line('create_group_title');
 				$this->data['page_content'] = 'backend/groups/add';
 
 				$this->render();
@@ -86,7 +89,7 @@ class Groups extends Backend
 		}
 		else
 		{
-			$this->form_validation->set_rules('group_name', 'lang:edit_group_validation_name_label', 'required|alpha_dash');
+			$this->form_validation->set_rules('group_name', 'lang:group_name', 'required|alpha_dash');
 
 			$group = $this->ion_auth->group($id)->row();
 
@@ -109,7 +112,6 @@ class Groups extends Backend
 				}
 			}
 
-			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
 			//$this->data['group']   = $group;
 
 			$readonly = $this->config->item('admin_group', 'ion_auth') === $group->name ? 'readonly' : '';
@@ -130,7 +132,8 @@ class Groups extends Backend
 				'class' => 'form-control'
 			);
 
-			$this->data['subtitle'] = 'Group edit';
+			$this->data['message']      = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+			$this->data['subtitle']     = 'Group edit';
 			$this->data['page_content'] = 'backend/groups/edit';
 
 			$this->render();
