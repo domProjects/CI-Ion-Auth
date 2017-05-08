@@ -34,4 +34,80 @@ class Backend_tools_model extends CI_Model
 	{
 		$this->db->insert($table, $data);
 	}
+
+
+	//
+	// Maintenance
+	//
+
+	public function control_table()
+	{
+		$str = NULL;
+		$list_tables = $this->db->list_tables();
+
+		if ($list_tables)
+		{
+			foreach ($list_tables as $tables)
+			{
+				$str .= '<tr>';
+				$str .= '<td>' . $tables . '</td>';
+
+				foreach ($this->check_table($tables) as $check)
+				{
+					$check_result = ($check['Msg_type'] == 'error') ? 'repair' : $check['Msg_text'];
+
+					$str .= '<td>' . $check['Msg_type'] . '</td>';
+					$str .= '<td>' . $check_result . '</td>';
+				}
+
+				foreach ($this->analyze_table($tables) as $analyze)
+				{
+					//$check_result = ($check['Msg_type'] == 'error') ? 'repair' : $check['Msg_text'];
+
+					$str .= '<td>' . $analyze['Msg_type'] . '</td>';
+					$str .= '<td>' . $analyze['Msg_text'] . '</td>';
+				}
+
+				$str .= '</tr>';
+			}
+
+			return $str;
+		}
+	}
+
+
+	public function analyze_table($table)
+	{
+		if ( ! empty($table))
+		{
+			$data  = array();
+			$query = $this->db->query('ANALYZE TABLE ' . $table);
+
+			if ($query)
+			{
+				$data = $query->result_array();
+			}
+
+			return $data;
+		}
+	}
+
+
+	public function check_table($table)
+	{
+		if ( ! empty($table))
+		{
+			$data  = array();
+			$query = $this->db->query('CHECK TABLE ' . $table);
+
+			if ($query)
+			{
+				$data = $query->result_array();
+			}
+
+			return $data;
+		}
+	}
+
+
 }

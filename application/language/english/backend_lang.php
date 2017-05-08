@@ -10,6 +10,7 @@ $lang['logout']                  = 'Logout';
 $lang['dashboard']               = 'Dashboard';
 $lang['security_groups']         = 'Security groups';
 $lang['users']                   = 'Users';
+$lang['maintenance']             = 'Maintenance';
 
 
 $lang['list']                    = 'List';

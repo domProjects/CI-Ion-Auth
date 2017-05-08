@@ -95,6 +95,10 @@ class Backend extends MY_Controller
 			$this->data['title'] = $this->lang->line('administration');
 
 			// Common language
+			$this->data['lang_dashboard']          = $this->lang->line('dashboard');
+			$this->data['lang_security_groups']    = $this->lang->line('security_groups');
+			$this->data['lang_users']              = $this->lang->line('users');
+			$this->data['lang_maintenance']        = $this->lang->line('maintenance');
 			$this->data['lang_list']               = $this->lang->line('list');
 			$this->data['lang_actions']            = $this->lang->line('actions');
 			$this->data['lang_help']               = $this->lang->line('help');
