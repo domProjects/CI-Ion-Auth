@@ -82,18 +82,10 @@ class Maintenance extends Backend
 		}
 		else
 		{
-			$filename = 'backup_table-' . date('Ymd_His') . '.sql';
+			$query    = 'SELECT * FROM dp_auth_groups';
+			$category = 'security_groups';
 
-$query = $this->db->query("SELECT * FROM dp_auth_groups");
-
-$delimiter = ",";
-$newline = "\r\n";
-$enclosure = '"';
-
-$backup = $this->dbutil->csv_from_result($query, $delimiter, $newline, $enclosure);
-
-
-			force_download($filename, $backup);
+			$this->backend_tools_model->export_csv($query, $category);
 		}
 	}
 

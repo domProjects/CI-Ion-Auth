@@ -32,8 +32,30 @@ class Backend_tools_model extends CI_Model
 
 	public function insert_csv($table, $data)
 	{
-		$this->db->insert($table, $data);
+		if ( ! empty($table) OR ! empty($data))
+		{
+			$this->db->insert($table, $data);
+		}
 	}
+
+
+	public function export_csv($query, $category = 'export', $delimiter = ',', $newline = "\r\n", $enclosure = '"')
+	{
+		if ( ! empty($query))
+		{
+			$this->load->helper(array('text', 'inflector'));
+
+			$category  = convert_accented_characters($category);
+			$category  = underscore($category);
+			$filename  = $category . '-' . date('Ymd_His') . '.csv';
+			$query     = $this->db->query($query);
+			$backup    = $this->dbutil->csv_from_result($query, $delimiter, $newline, $enclosure);
+
+			force_download($filename, $backup);
+		}
+	}
+
+
 
 
 	//
