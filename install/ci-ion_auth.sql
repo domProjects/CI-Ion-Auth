@@ -84,7 +84,7 @@ CREATE TABLE `dp_auth_users` (
 --
 
 INSERT INTO `dp_auth_users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
-(1, '127.0.0.1', 'admin', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', NULL, NULL, 'r.jbuEWKUW.k4o1ldazGre', 1268889823, 1491845957, 1, 'Admin', 'DP', 'domProjects', '0');
+(1, '127.0.0.1', 'admin', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', NULL, NULL, 'r.jbuEWKUW.k4o1ldazGre', 1268889823, 1491845957, 1, 'Admin', 'DP', 'domProjects', '');
 
 -- --------------------------------------------------------
 

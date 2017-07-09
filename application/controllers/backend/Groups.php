@@ -81,9 +81,9 @@ class Groups extends Backend
 	}
 
 
-	public function edit($id = NULL)
+	public function edit($id)
 	{
-		if ( ! $this->ion_auth->logged_in() && ! $this->ion_auth->is_admin())
+		if ( ! $this->ion_auth->logged_in() || ( ! $this->ion_auth->is_admin() && ! ($this->ion_auth->group()->row()->id == $id)))
 		{
 			redirect('auth/login', 'refresh');
 		}
@@ -219,5 +219,27 @@ class Groups extends Backend
 
 			$this->render();
  		} 
+	}
+
+
+	public function export()
+	{
+		if ( ! $this->ion_auth->logged_in() OR ! $this->ion_auth->is_admin())
+		{
+			redirect('auth/login/backend', 'refresh');
+		}
+		elseif ( ! $this->ion_auth->is_admin())
+		{
+			return show_error('You must be an administrator to view this page.');
+		}
+		else
+		{
+			$this->load->dbutil();
+
+			$query    = 'SELECT name, description FROM dp_auth_groups';
+			$category = 'security_groups';
+
+			$this->backend_tools_model->export_csv($query, $category);
+		}
 	}
 }

@@ -39,17 +39,17 @@ class Backend_tools_model extends CI_Model
 	}
 
 
-	public function export_csv($query, $category = 'export', $delimiter = ',', $newline = "\r\n", $enclosure = '"')
+	public function export_csv($query, $category = 'export', $delimiter = ';', $enclosure = '', $newline = "\r\n")
 	{
 		if ( ! empty($query))
 		{
-			$this->load->helper(array('text', 'inflector'));
+			$this->load->helper(array('download', 'inflector', 'text'));
 
-			$category  = convert_accented_characters($category);
-			$category  = underscore($category);
-			$filename  = $category . '-' . date('Ymd_His') . '.csv';
-			$query     = $this->db->query($query);
-			$backup    = $this->dbutil->csv_from_result($query, $delimiter, $newline, $enclosure);
+			$category = convert_accented_characters($category);
+			$category = underscore($category);
+			$filename = $category . '-' . date('Ymd_His') . '.csv';
+			$query    = $this->db->query($query);
+			$backup   = $this->dbutil->csv_from_result($query, $delimiter, $newline, $enclosure);
 
 			force_download($filename, $backup);
 		}
@@ -61,6 +61,111 @@ class Backend_tools_model extends CI_Model
 	//
 	// Maintenance
 	//
+
+	public function server_version()
+	{
+		//$get_software = explode('/', $_SERVER['SERVER_SOFTWARE']);
+		$get_software = explode('/', apache_get_version());
+		$result       = explode(' ', $get_software[1]);
+		$name         = $get_software[0];
+		$version      = $result[0];
+
+		return $version;
+	}
+
+
+	public function disk_totalspace($dir = DIRECTORY_SEPARATOR)
+	{
+		return disk_total_space($dir);
+    }
+
+
+	public function disk_freespace($dir = DIRECTORY_SEPARATOR)
+	{
+		return disk_free_space($dir);
+	}
+
+
+	public function disk_usespace($dir = DIRECTORY_SEPARATOR)
+	{
+		return $this->disk_totalspace($dir) - $this->disk_freespace($dir);
+	}
+
+
+	public function disk_freepercent($dir = DIRECTORY_SEPARATOR, $precision = 0, $display_unit = TRUE)
+	{
+		if ($display_unit === FALSE)
+		{
+			$unit = NULL;
+		}
+		else
+		{
+			$unit = '%';
+		}
+
+		return round(($this->disk_freespace($dir) * 100) / $this->disk_totalspace($dir), $precision) . $unit;
+    }
+
+
+	public function disk_usepercent($dir = DIRECTORY_SEPARATOR, $precision = 0, $display_unit = TRUE)
+	{
+		if ($display_unit === FALSE)
+		{
+			$unit = NULL;
+		}
+		else
+		{
+			$unit = '%';
+		}
+
+		return round(($this->disk_usespace($dir) * 100) / $this->disk_totalspace($dir), $precision) . $unit;
+	}
+
+
+	public function memory_peak_usage($real = FALSE)
+	{
+		if ($real)
+		{
+			return memory_get_peak_usage(TRUE);
+		}
+		else
+		{
+			return memory_get_peak_usage(FALSE);
+		}
+	}
+
+
+	public function memory_usage()
+	{
+		return memory_get_usage();
+	}
+
+
+	public function memory_free($real = FALSE)
+	{
+		return $this->memory_peak_usage($real) - $this->memory_usage();
+	}
+
+
+	public function memory_usepercent($real = TRUE, $precision = 0, $display_unit = TRUE)
+	{
+		if ($display_unit === FALSE)
+		{
+			$unit = NULL;
+		}
+		else
+		{
+			$unit = '%';
+		}
+
+		return round(($this->memory_usage() * 100) / $this->memory_peak_usage($real), $precision) . $unit;
+	}
+
+
+
+
+
+
 
 	public function control_table()
 	{

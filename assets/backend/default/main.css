@@ -8284,6 +8284,8 @@ body {
 .adm_section {
   flex: 1;
   padding: 15px 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* FOOTER */

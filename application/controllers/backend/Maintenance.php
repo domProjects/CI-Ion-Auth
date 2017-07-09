@@ -7,7 +7,7 @@ class Maintenance extends Backend
 	{
 		parent::__construct();
 
-		$this->load->helper('download');
+		$this->load->helper('number');
 
 		$this->load->dbutil();
 	}
@@ -27,6 +27,13 @@ class Maintenance extends Backend
 		{
 			$this->data['db_platform']    = $this->db->platform();
 			$this->data['db_version']     = $this->db->version();
+
+			$this->data['apache_version'] = $this->backend_tools_model->server_version();
+
+			$this->data['php_version']    = phpversion();
+			$this->data['zend_version']   = zend_version();
+			$this->data['disk_freespace'] = byte_format($this->backend_tools_model->disk_freespace());
+			$this->data['memory_free']    = byte_format($this->backend_tools_model->memory_free());
 
 			$this->data['control_table'] = $this->backend_tools_model->control_table();
 
@@ -50,16 +57,18 @@ class Maintenance extends Backend
 		}
 		else
 		{
-			$filename = 'backup_' . date('Ymd_His') . '.sql';
+			$this->load->helper('download');
+
+			$filename = 'backup_' . date('Ymd_His') . '.zip';
 
 			$prefs = array(
 				'tables'             => array(),
 				'ignore'             => array(),
-				'format'             => 'txt',
+				'format'             => 'zip',
 				'filename'           => $filename,
 				'add_drop'           => TRUE,
 				'add_insert'         => TRUE,
-				'newline'            => "\n",
+				'newline'            => "\r\n",
 				'foreign_key_checks' => TRUE
 			);
 

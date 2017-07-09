@@ -20,9 +20,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<?php echo form_label('{lang_company_name}', 'company'); ?>
 										<?php echo form_input($company); ?>
 									</div>
-									<div class="form-group">
-										<?php echo form_label('{lang_phone}', 'phone'); ?>
-										<?php echo form_input($phone); ?>
+
+									<div class="form-group row">
+										<div class="col-12 col-md-6">
+											<?php echo form_label('{lang_email}', 'email'); ?>
+											<?php echo form_input($email); ?>
+										</div>
+										<div class="col-12 col-md-6">
+											<?php echo form_label('{lang_phone}', 'phone'); ?>
+											<?php echo form_input($phone); ?>
+										</div>
 									</div>
 									<div class="form-group has-warning row">
 										<div class="col-12 col-md-6">
@@ -40,28 +47,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php if ($this->ion_auth->is_admin()): ?>
 									<div class="form-group">
 										<p><?php echo lang('edit_user_groups_heading'); ?></p>
-<?php foreach ($groups as $group): ?>
+	<?php foreach ($groups as $group): ?>
 										<div class="form-check form-check-inline">
 											<label class="custom-control custom-checkbox">
-<?php
-	$checked = NULL;
-	$item    = NULL;
+	<?php
+		$checked  = NULL;
+		$disabled = NULL;
+		$item     = NULL;
 
-	foreach ($currentGroups as $grp)
-	{
-		if ($group['id'] == $grp->id)
+		foreach ($currentGroups as $grp)
 		{
-			$checked = ' checked';
-			break;
+			if ($group['id'] == $grp->id)
+			{
+				$checked = ' checked';
+			}
+
+			if ($user_id == 1)
+			{
+				$disabled = ' disabled';
+			}
 		}
-	}
-?>
-												<input type="checkbox" name="groups[]" value="<?php echo $group['id']; ?>" class="custom-control-input"<?php echo $checked; ?>>
+	?>
+												<input type="checkbox" name="groups[]" value="<?php echo $group['id']; ?>" class="custom-control-input"<?php echo $checked . $disabled; ?>>
 												<span class="custom-control-indicator"></span>
 												<span class="custom-control-description"><?php echo htmlspecialchars($group['name'], ENT_QUOTES, 'UTF-8'); ?></span>
 											</label>
 										</div>
-<?php endforeach; ?>
+	<?php endforeach; ?>
 									</div>
 <?php endif; ?>
 									<div class="form-group">

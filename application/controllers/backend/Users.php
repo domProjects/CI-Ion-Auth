@@ -66,10 +66,10 @@ class Users extends Backend
 			$this->form_validation->set_rules('password', 'lang:password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
 			$this->form_validation->set_rules('password_confirm', 'lang:password_confirm', 'required');
 
-			if ($this->form_validation->run() == TRUE)
+			if ($this->form_validation->run() === TRUE)
 			{
 				$email    = strtolower($this->input->post('email'));
-				$identity = ($identity_column === 'email') ? $email : strtolower($this->input->post('identity'));
+				$identity = ($identity_column == 'email') ? $email : strtolower($this->input->post('identity'));
 				$password = $this->input->post('password');
 
 				$additional_data = array(
@@ -80,7 +80,7 @@ class Users extends Backend
 				);
 			}
 
-			if ($this->form_validation->run() == TRUE && $this->ion_auth->register($identity, $password, $email, $additional_data))
+			if ($this->form_validation->run() === TRUE && $this->ion_auth->register($identity, $password, $email, $additional_data))
 			{
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
 
@@ -237,7 +237,7 @@ class Users extends Backend
 
 	public function edit($id)
 	{
-		if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->ion_auth->user()->row()->id == $id)))
+		if ( ! $this->ion_auth->logged_in() || ( ! $this->ion_auth->is_admin() && ! ($this->ion_auth->user()->row()->id == $id)))
 		{
 			redirect('auth/login', 'refresh');
 		}
@@ -250,6 +250,7 @@ class Users extends Backend
 			// validate form input
 			$this->form_validation->set_rules('first_name', 'lang:edit_user_validation_fname_label', 'trim|required');
 			$this->form_validation->set_rules('last_name', 'lang:dit_user_validation_lname_label', 'trim|required');
+			$this->form_validation->set_rules('email', 'lang:email', 'required|valid_email');
 			$this->form_validation->set_rules('phone', 'lang:edit_user_validation_phone_label');
 			$this->form_validation->set_rules('company', 'lang:edit_user_validation_company_label', 'trim');
 
@@ -274,6 +275,7 @@ class Users extends Backend
 						'first_name' => ucwords($this->input->post('first_name'), '-'),
 						'last_name'  => mb_strtoupper($this->input->post('last_name'), 'UTF-8'),
 						'company'    => mb_strtoupper($this->input->post('company'), 'UTF-8'),
+						'email'      => $this->input->post('email'),
 						'phone'      => $this->input->post('phone')
 					);
 
@@ -353,6 +355,13 @@ class Users extends Backend
 				'value' => $this->form_validation->set_value('company', $user->company),
 				'class' => 'form-control'
 			);
+			$this->data['email'] = array(
+				'type'  => 'email',
+				'name'  => 'email',
+				'id'    => 'email',
+				'value' => $this->form_validation->set_value('email', $user->email),
+				'class' => 'form-control'
+				);
 			$this->data['phone'] = array(
 				'type'  => 'tel',
 				'name'  => 'phone',
@@ -386,11 +395,35 @@ class Users extends Backend
 	}
 
 
+	public function export()
+	{
+		if ( ! $this->ion_auth->logged_in() OR ! $this->ion_auth->is_admin())
+		{
+			redirect('auth/login/backend', 'refresh');
+		}
+		elseif ( ! $this->ion_auth->is_admin())
+		{
+			return show_error('You must be an administrator to view this page.');
+		}
+		else
+		{
+			$this->load->dbutil();
+
+			$query    = 'SELECT username, email, first_name, last_name, company, phone FROM dp_auth_users';
+			$category = 'users';
+
+			$this->backend_tools_model->export_csv($query, $category);
+		}
+	}
+
+
 	public function _get_csrf_nonce()
 	{
 		$this->load->helper('string');
+
 		$key   = random_string('alnum', 8);
 		$value = random_string('alnum', 20);
+
 		$this->session->set_flashdata('csrfkey', $key);
 		$this->session->set_flashdata('csrfvalue', $value);
 
@@ -401,6 +434,7 @@ class Users extends Backend
 	public function _valid_csrf_nonce()
 	{
 		$csrfkey = $this->input->post($this->session->flashdata('csrfkey'));
+
 		if ($csrfkey && $csrfkey == $this->session->flashdata('csrfvalue'))
 		{
 			return TRUE;

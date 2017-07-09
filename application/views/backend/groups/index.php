@@ -18,7 +18,7 @@ $nbr_groups = ($count_groups > 0) ? ' <span class="badge badge-info">' . $count_
 											<?php echo anchor('backend/groups/add', '{lang_add_group}', array('class' => 'dropdown-item')); ?>
 											<?php echo anchor('backend/groups/import', '{lang_import_list}', array('class' => 'dropdown-item')); ?>
 											<div class="dropdown-divider"></div>
-											<?php echo anchor('#', '{lang_export_list}', array('class' => 'dropdown-item')); ?>
+											<?php echo anchor('backend/groups/export', '{lang_export_list}', array('class' => 'dropdown-item')); ?>
 										</div>
 									</li>
 									<li class="nav-item">
@@ -46,7 +46,14 @@ $nbr_groups = ($count_groups > 0) ? ' <span class="badge badge-info">' . $count_
 													<td><?php echo htmlspecialchars($group->description, ENT_QUOTES, 'UTF-8'); ?></td>
 													<td>
 														<?php echo anchor('backend/groups/edit/' . $group->id, '{lang_edit}', array('class' => 'btn btn-primary btn-sm', 'role' => 'button')); ?>
-														<?php echo anchor('#' . $group->id, '{lang_delete}', array('class' => 'btn btn-danger btn-sm', 'role' => 'button')); ?>
+	<?php
+
+	if ($group->id != 1)
+	{
+		echo anchor('#' . $group->id, '{lang_delete}', array('class' => 'btn btn-danger btn-sm', 'role' => 'button'));
+	}
+
+	?>
 													</td>
 												</tr>
 <?php endforeach; ?>

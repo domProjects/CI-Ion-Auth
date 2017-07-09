@@ -1,0 +1,190 @@
+html, body, h1, h3, p, a, form, fieldset, legend, label, input {
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline; }
+
+html {
+  box-sizing: border-box; }
+
+*, *::before, *::after {
+  box-sizing: inherit; }
+
+body {
+  background-color: #2196F3;
+  color: #FFF;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; }
+
+a {
+  cursor: pointer;
+  text-decoration: none; }
+
+.container {
+  display: flex;
+  height: inherit;
+  width: inherit; }
+
+.header {
+  background-color: #2196F3;
+  flex: 0 1 60vw;
+  display: flex;
+  align-items: center; }
+
+.header_title {
+  flex: 0 1 100%;
+  padding: 0 4rem;
+  border-bottom: 2px solid #FFF; }
+
+.header_title h1 {
+  font-size: 5rem;
+  text-align: right; }
+
+.main {
+  background-color: #FFF;
+  color: #212121;
+  flex: 1;
+  display: flex;
+  align-items: center; }
+
+.main_content {
+  flex: 0 1 100%;
+  padding: 0 4rem; }
+
+.main_content form {
+  width: 100%; }
+
+.main_content legend {
+  padding-bottom: 2rem;
+  color: #4285F4;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: .2rem;
+  text-transform: uppercase; }
+
+.main_content .form_group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 0 20px; }
+
+.main_content .form_group:last-child {
+  margin: 0; }
+
+.main_content .form_group label {
+  display: block;
+  margin: 0 0 .6rem;
+  color: rgba(0, 0, 0, 0.6);
+  text-transform: uppercase;
+  letter-spacing: .2rem; }
+
+.main_content .form_group input {
+  outline: none;
+  display: block;
+  background: rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding: 12px 20px;
+  color: rgba(0, 0, 0, 0.6); }
+
+.main_content .form_group input[type="submit"] {
+  background: #2196F3;
+  width: 100%;
+  padding: 12px 20px;
+  color: #FFF;
+  font-weight: 500;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  cursor: pointer; }
+
+.main_content .form_group .form_remember {
+  font-size: .9rem;
+  letter-spacing: 0;
+  text-transform: none; }
+
+.main_content .form_group .form_remember input[type="checkbox"] {
+  display: inline-block;
+  margin-right: 10px;
+  width: auto; }
+
+.main_content .form_group .form_recovery {
+  color: #2196F3;
+  font-size: .9rem; }
+
+.main_content .label--checkbox {
+  cursor: pointer;
+  margin: .5rem;
+  position: relative; }
+
+.main_content .checkbox {
+  cursor: pointer;
+  position: relative; }
+
+.main_content .checkbox::before {
+  transition: all .250s ease-in-out;
+  content: "";
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #2196F3; }
+
+.main_content .checkbox:checked::before {
+  transform: rotate(-45deg);
+  height: .5rem;
+  border-color: #2196F3;
+  border-top-style: none;
+  border-right-style: none; }
+
+.main_content .checkbox::after {
+  content: "";
+  position: absolute;
+  top: -0.125rem;
+  left: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  background-color: #FFF;
+  cursor: pointer; }
+
+.main_content .block {
+  margin-top: 1rem;
+  width: 100%; }
+
+.main_content .block--error {
+  color: #F44336;
+  font-weight: 500; }
+
+.main_content .auth_choice {
+  text-align: center; }
+
+.main_content .auth_choice h3 {
+  font-weight: 500; }
+
+.main_content .auth_choice a {
+  display: block;
+  background-color: #2196F3;
+  letter-spacing: .2rem;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  color: #FFF;
+  font-size: 1.5em;
+  border: 2px solid #2196F3;
+  text-transform: uppercase; }
+
+.main_content .auth_choice a:last-child {
+  margin-bottom: 0; }
+
+.main_content .auth_choice a:hover {
+  background-color: #FFF;
+  color: #2196F3; }
+
+.main_content .auth_user {
+  color: #2196F3;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  text-transform: uppercase; }
