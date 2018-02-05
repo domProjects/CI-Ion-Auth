@@ -23,27 +23,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$host_dev    = array('localhost', '127.0.0.1', '::1');
-$host_folder = 'ci-ion_auth';
-$host_prod   = 'your_domain.tld';
+// Possible hosts locally. You can add some if needed.
+$config['host_dev'] = array('localhost', '127.0.0.1', '::1');
 
-if (in_array($_SERVER['HTTP_HOST'], $host_dev, TRUE))
-{
-	$domain = $_SERVER['HTTP_HOST'] . '/' . $host_folder;
-}
-else
-{
-	$domain = $host_prod;
-}
+// Fill in the file of your project here when you develop locally.
+$host_dev = 'CI-Ion-Auth';
 
-if ( ! empty($_SERVER['HTTPS']))
-{
-	$config['base_url'] = 'https://'.$domain;
-}
-else
-{
-	$config['base_url'] = 'http://'.$domain;
-}
+// Fill in the domain name here when your project is online.
+// Example : www.johndoe.com
+//           johndoe.com
+$host_prod = 'your_domain.tld';
+
+// WARNING: Do not modify the lines below
+$domain = (in_array($_SERVER['HTTP_HOST'], $config['host_dev'], TRUE)) ? $_SERVER['HTTP_HOST'] . '/' . $host_dev : $host_prod;
+
+$config['base_url'] = ( ! empty($_SERVER['HTTPS'])) ? 'https://' . $domain : 'http://' . $domain;
 
 /*
 |--------------------------------------------------------------------------
